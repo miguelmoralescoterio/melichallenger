@@ -1,4 +1,4 @@
-package com.melichallenger.users;
+package com.melichallenger;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -38,7 +38,15 @@ public class UsersApplication {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
             .group("users")
-            .packagesToScan("com.melichallenger")
+            .packagesToScan("com.melichallenger.users")
+            .build();
+    }
+    
+    @Bean
+    public GroupedOpenApi publicLoansApi() {
+        return GroupedOpenApi.builder()
+            .group("loans")
+            .packagesToScan("com.melichallenger.loans")
             .build();
     }
 
