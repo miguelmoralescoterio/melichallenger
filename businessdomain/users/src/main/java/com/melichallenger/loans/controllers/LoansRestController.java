@@ -5,10 +5,14 @@
 package com.melichallenger.loans.controllers;
 
 import com.melichallenger.loans.entities.Loans;
+import com.melichallenger.loans.entities.Payments;
 import com.melichallenger.loans.entities.RequestLoan;
+import com.melichallenger.loans.entities.RequestPayment;
 import com.melichallenger.loans.entities.ResponseLoan;
+import com.melichallenger.loans.entities.ResponsePayment;
 import com.melichallenger.loans.entities.Targets;
 import com.melichallenger.loans.repository.LoansRepository;
+import com.melichallenger.loans.repository.PaymentsRepository;
 import com.melichallenger.loans.repository.TargetsRepository;
 import com.melichallenger.resources.ResourceNotFoundException;
 import com.melichallenger.users.entities.Users;
@@ -43,6 +47,9 @@ public class LoansRestController {
     
     @Autowired
     UsersRepository usersRepository;
+    
+    @Autowired
+    PaymentsRepository paymentsRepository;
     
     @GetMapping("/all")
     @Operation(summary = "Obtener prestamos", description = "Obtiene la lista de todos los prestamos registrados")
@@ -206,6 +213,40 @@ public class LoansRestController {
         
         final Loans updatedLoan = loansRepository.save(loan);
         return ResponseEntity.ok(updatedLoan);
+    }
+    
+    @PostMapping("/paid/{id}")
+    @Operation(summary = "Pagar un prestamo", description = "Registrar pagos a un prestamo nuevo")
+    public ResponseEntity<?> paid(@PathVariable long id, @RequestBody RequestPayment input) throws ResourceNotFoundException, Exception {
+        if(input.getAmount() <= 0) {
+            throw new Exception(String.format("El monto del pago (%f) debe ser superior a  0", input.getAmount()));
+        }
+        Loans loan = loansRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Prestamo no encontrado, con id :: " + id));
+        
+        Double paidAmount = paymentsRepository.paidAmount(loan.getId());
+        Double debtAmount = loan.getAmount_total() - paidAmount;
+        
+        if((paidAmount+input.getAmount()) > loan.getAmount_total()) {
+            throw new Exception(String.format("El monto del pago (%f) excede el total de la deuda (%f), ya se ha pagado (%f)", input.getAmount(), debtAmount, paidAmount));
+        }
+        
+        Payments savePayment = new Payments();
+        savePayment.setLoan_id(loan.getId());
+        savePayment.setAmount(input.getAmount());
+        savePayment.setReference(input.getReference());
+        savePayment.setObservation(input.getObservation());
+        savePayment.setStatus("paid");
+                
+        final Payments savedPayment = paymentsRepository.save(savePayment);
+        ResponsePayment responsePayment = new ResponsePayment();
+        responsePayment.setId(savedPayment.getId());
+        responsePayment.setAmount(savedPayment.getAmount());
+        paidAmount = paymentsRepository.paidAmount(loan.getId());
+        debtAmount = loan.getAmount_total() - paidAmount;
+        responsePayment.setDebt(debtAmount);
+        responsePayment.setLoan_id(loan.getId());
+        return ResponseEntity.ok(responsePayment);
     }
     
 }
