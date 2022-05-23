@@ -8,6 +8,7 @@ import com.melichallenger.loans.entities.Loans;
 import com.melichallenger.loans.entities.Payments;
 import com.melichallenger.loans.entities.RequestLoan;
 import com.melichallenger.loans.entities.RequestPayment;
+import com.melichallenger.loans.entities.ResponseDebt;
 import com.melichallenger.loans.entities.ResponseLoan;
 import com.melichallenger.loans.entities.ResponsePayment;
 import com.melichallenger.loans.entities.Targets;
@@ -247,6 +248,48 @@ public class LoansRestController {
         responsePayment.setDebt(debtAmount);
         responsePayment.setLoan_id(loan.getId());
         return ResponseEntity.ok(responsePayment);
+    }
+    
+    @GetMapping("/debt/{id}")
+    @Operation(summary = "Obtener deuda de prestamo", description = "Obtiene la deuda de un prestamo por id")
+    public ResponseEntity<?> debtLoan(@Parameter(description="ID del prestamo a buscar") @PathVariable long id, @RequestParam(required = false) String dateTo) throws ResourceNotFoundException {
+        Loans loan = loansRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Presmo no encontrado, con id :: " + id));
+        Double paidAmount;
+        if(dateTo != null && !dateTo.isEmpty()) {
+            paidAmount = paymentsRepository.paidAmount(loan.getId(), dateTo);
+        } else {
+            paidAmount = paymentsRepository.paidAmount(loan.getId());
+        }
+        Double debtAmount = loan.getAmount_total() - paidAmount;
+        ResponseDebt responseDebt = new ResponseDebt();
+        responseDebt.setBalance(debtAmount);
+        return ResponseEntity.ok(responseDebt);
+    }
+    
+    @GetMapping("/totalDebt")
+    @Operation(summary = "Obtener deuda total", description = "Obtiene la deuda general")
+    public ResponseEntity<?> debtTotal(@RequestParam(required = false) String dateTo, @RequestParam(required = false) String target) throws ResourceNotFoundException {
+        Double debtAmount;
+        Double paidAmount;
+        if(target != null && !target.isEmpty()) {
+            debtAmount = loansRepository.debtAmountTarget(target);
+        } else {
+            debtAmount = loansRepository.debtAmount();
+        }
+        if(dateTo != null && !dateTo.isEmpty() && target != null && !target.isEmpty()) {
+            paidAmount = paymentsRepository.paidAmountTarget(target, dateTo);            
+        } else if(dateTo != null && !dateTo.isEmpty() && (target == null || target.isEmpty())) {
+            paidAmount = paymentsRepository.paidAmount(dateTo);
+        } else if((dateTo == null || dateTo.isEmpty()) && target != null && !target.isEmpty()) {
+            paidAmount = paymentsRepository.paidAmountTarget(target);
+        } else {
+            paidAmount = paymentsRepository.paidAmount();
+        }
+        Double debtTotalAmount = debtAmount - paidAmount;
+        ResponseDebt responseDebt = new ResponseDebt();
+        responseDebt.setBalance(debtTotalAmount);
+        return ResponseEntity.ok(responseDebt);
     }
     
 }

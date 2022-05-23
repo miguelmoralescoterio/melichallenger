@@ -39,4 +39,22 @@ public interface LoansRepository extends JpaRepository<Loans, Long> {
          
     @Query( value = "SELECT * FROM loans l WHERE DATE(created_at) BETWEEN ?3 AND ?4 LIMIT ?1 OFFSET ?2", nativeQuery = true )
     List<Loans> findByPaginate(int pageCount, int page, String dateFrom, String dateTo);
+
+    @Query( value = "SELECT COALESCE(SUM(amount_total), 0) AS debt_amount FROM loans l WHERE status = 'active'", nativeQuery = true )
+    Double debtAmount();
+    
+    @Query( value = "SELECT COALESCE(SUM(l.amount_total), 0) AS debt_amount "
+            + "FROM loans l "
+            + "JOIN targets t ON t.id = l.taget_id AND UPPER(description) = UPPER(?1)"
+            + "WHERE l.status = 'active'", nativeQuery = true )
+    Double debtAmountTarget(String target);
+
+    @Query( value = "SELECT COALESCE(SUM(amount_total), 0) AS debt_amount FROM loans l WHERE status = 'active' AND DATE(created_at) <= ?1", nativeQuery = true )
+    Double debtAmount(String dateTo);
+    
+    @Query( value = "SELECT COALESCE(SUM(l.amount_total), 0) AS debt_amount "
+            + "FROM loans l "
+            + "JOIN targets t ON t.id = l.taget_id AND UPPER(description) = UPPER(?1)"
+            + "WHERE l.status = 'active' AND DATE(l.created_at) <= ?2", nativeQuery = true )
+    Double debtAmountTarget(String target, String dateTo);
 }
