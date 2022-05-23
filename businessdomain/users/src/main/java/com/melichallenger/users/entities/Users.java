@@ -4,6 +4,8 @@
  */
 package com.melichallenger.users.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
@@ -40,12 +42,18 @@ public class Users implements Serializable {
     
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition="DATETIME default CURRENT_TIMESTAMP")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonIgnore
     private final Timestamp created_at = null;
     
     @CreationTimestamp
     @Column(name = "updated_at", nullable = false, updatable = false, columnDefinition="DATETIME default CURRENT_TIMESTAMP on update current_timestamp")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonIgnore
     private final Timestamp updated_at = null;
     @Column(name = "deleted_at", nullable = true)
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonIgnore
     private final Timestamp deleted_at = null;
 
     public Users() {        

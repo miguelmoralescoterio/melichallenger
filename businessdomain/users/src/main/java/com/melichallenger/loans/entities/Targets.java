@@ -4,17 +4,24 @@
  */
 package com.melichallenger.loans.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.mapping.Set;
 
 /**
  *
@@ -38,12 +45,16 @@ public class Targets implements Serializable {
         
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition="DATETIME default CURRENT_TIMESTAMP")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private final Timestamp created_at = null;
     
     @CreationTimestamp
     @Column(name = "updated_at", nullable = false, updatable = false, columnDefinition="DATETIME default CURRENT_TIMESTAMP on update current_timestamp")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private final Timestamp updated_at = null;
+    
     @Column(name = "deleted_at", nullable = true)
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private final Timestamp deleted_at = null;
 
     public Targets() {        
@@ -57,5 +68,5 @@ public class Targets implements Serializable {
         this.cant_min = cant_min;
         this.rate = rate;
         this.status = "active";
-    }
+    }    
 }
