@@ -1,8 +1,18 @@
 /**
  * DDL
+ *
+ * Previo crear el usuario
+ * CREATE USER 'melidbuser'@localhost IDENTIFIED BY 'm3l4ch4llep3r';
+ * 
  */
 
 CREATE SCHEMA meli_challenger;
+
+/**
+ * GRANT ALL PRIVILEGES ON meli_challenger.* TO 'melidbuser'@localhost IDENTIFIED BY 'm3l4ch4llep3r';
+ * GRANT ALL PRIVILEGES ON meli_challenger.* TO 'melidbuser'@localhost;
+ * FLUSH PRIVILEGES;
+ */
 
 USE meli_challenger;
 
@@ -21,6 +31,7 @@ CREATE TABLE users (
   deleted_at datetime default current_timestamp
 );
 
+DELIMITER $$
 CREATE TRIGGER before_users_update
 BEFORE UPDATE
 ON users FOR EACH ROW
@@ -30,7 +41,8 @@ BEGIN
     ELSEIF new.status IN ('active','inactive') THEN
       SET new.deleted_at = null;
     END IF;
-END;
+END;$$
+DELIMITER;
 
 /**
  * targets
@@ -49,6 +61,7 @@ CREATE TABLE targets (
   deleted_at datetime default null
 );
 
+DELIMITER $$
 CREATE TRIGGER before_targets_update
 BEFORE UPDATE
 ON targets FOR EACH ROW
@@ -58,7 +71,9 @@ BEGIN
     ELSEIF new.status IN ('active','inactive') THEN
       SET new.deleted_at = null;
     END IF;
-END;
+END;$$
+DELIMITER;
+
 /**
  * Prestamos (loans)
  */
@@ -83,6 +98,7 @@ CREATE TABLE loans (
 
 );
 
+DELIMITER $$
 CREATE TRIGGER before_loans_update
 BEFORE UPDATE
 ON loans FOR EACH ROW
@@ -92,7 +108,8 @@ BEGIN
     ELSEIF new.status IN ('active','inactive') THEN
       SET new.deleted_at = null;
     END IF;
-END;
+END;$$
+DELIMITER;
 
 CREATE TABLE loans_payments (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -108,6 +125,7 @@ CREATE TABLE loans_payments (
   CONSTRAINT fk_loans_loans_payments FOREIGN KEY (loan_id) REFERENCES loans(id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
+DELIMITER $$
 CREATE TRIGGER before_loans_payments_update
 BEFORE UPDATE
 ON loans_payments FOR EACH ROW
@@ -117,4 +135,5 @@ BEGIN
     ELSEIF new.status IN ('pending','paid') THEN
       SET new.deleted_at = null;
     END IF;
-END;
+END;$$
+DELIMITER;
