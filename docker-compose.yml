@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  maria_db:
+    image: 'bitnami/mariadb:latest'
+    restart: always
+    ports:
+      - 3307:3307
+    environment:
+      MARIADB_USER: melidbuser
+      MARIADB_PASSWORD: m3l4ch4llep3r
+      MARIADB_DATABASE: meli_challenger
+      MYSQL_DATABASE: meli_challenger
+      MYSQL_USER: melidbuser
+      MYSQL_PASSWORD: m3l4ch4llep3r
+      MARIADB_ROOT_PASSWORD: m3l4ch4llep3r
+
+    volumes:
+      - db:/var/lib/mysql-docker
+      - ./database/ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
+
+  api_service:
+    build: .
+    restart: always
+    ports:
+      - 8081:8080
+    depends_on:
+      - maria_db
+    links:
+      - maria_db:api_service
+volumes:
+  db:      
