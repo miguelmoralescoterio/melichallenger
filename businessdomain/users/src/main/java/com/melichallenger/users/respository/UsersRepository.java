@@ -8,7 +8,7 @@ import com.melichallenger.users.entities.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- *
+ * Repositorio para las consultas de Usuarios
  * @author biosx1706
  */
 public interface UsersRepository extends JpaRepository<Users, Long> {

@@ -18,7 +18,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 /**
- *
+ * Entidad para el manejo de los datos de pagos de los prestamos
  * @author biosx1706
  */
 @Entity
@@ -54,6 +54,9 @@ public class Payments implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")    
     private final Timestamp deleted_at = null;
 
+    /**
+     * Constructor de la clase
+     */
     public Payments() {        
     }
 }

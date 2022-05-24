@@ -24,7 +24,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 /**
- *
+ * Entidad para el manejo de datos de los prestamos
  * @author biosx1706
  */
 @Entity
@@ -66,6 +66,9 @@ public class Loans implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")    
     private final Timestamp deleted_at = null;
 
+    /**
+     *
+     */
     public Loans() {        
     }
     
@@ -73,6 +76,11 @@ public class Loans implements Serializable {
     @ManyToOne(optional=false)
     @JoinColumn(name="taget_id",referencedColumnName="id", insertable=false, updatable=false)
     private Targets target;    
+
+    /**
+     * Obtinene el nombre del taget relacionado con el prestamo
+     * @return String Nombre del Target
+     */
     public String getTarget() {
         return this.target.getDescription();
     }
@@ -81,6 +89,11 @@ public class Loans implements Serializable {
     @ManyToOne(optional=false)
     @JoinColumn(name="user_id",referencedColumnName="id", insertable=false, updatable=false)
     private Users user;
+
+    /**
+     * Obtiene los nombres del usuario propietario del prestamos
+     * @return String nombres del usuario
+     */
     public String getUser() {
         return this.user.getName() + " " + this.user.getLastname();
     }

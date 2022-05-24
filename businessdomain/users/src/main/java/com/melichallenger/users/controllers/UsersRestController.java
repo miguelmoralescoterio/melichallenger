@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 /**
- *
+ * Controlador para el manejos de usuarios
  * @author biosx1706
  */
 @RestController
@@ -38,6 +38,10 @@ public class UsersRestController {
     @Autowired
     UsersRepository usersRepository;
             
+    /**
+     * Obtener todos los usuarios
+     * @return Lista de usuarios
+     */
     @GetMapping()
     @Operation(summary = "Obtener usuarios", description = "Obtiene la lista de todos los usuarios registrados")    
     public List<Users> list() {
@@ -45,6 +49,12 @@ public class UsersRestController {
         return users;
     }
     
+    /**
+     * Obtener un usuario
+     * @param id ID del usuario a buscar
+     * @return Objeto con los datos del usuario
+     * @throws ResourceNotFoundException Excepcion cuando un objeto no existe
+     */
     @GetMapping("/user/{id}")
     @Operation(summary = "Obtener usuario", description = "Obtiene un usuario por id")
     public Users  get(@Parameter(description="ID del usuario a buscar") @PathVariable long id) throws ResourceNotFoundException {
@@ -53,6 +63,13 @@ public class UsersRestController {
         return user;
     }
     
+    /**
+     * Actualizar informacion de un usuario
+     * @param id ID del usuario a actualizar
+     * @param input Datos del usuario
+     * @return Objeto usuraio con los datos actualizados
+     * @throws ResourceNotFoundException Excepcion cuando un objeto no existe
+     */
     @PutMapping("/user/{id}")
     @Operation(summary = "Actualizar usuario", description = "Actualizar datos de un usuario por id")
     public ResponseEntity<Users> put(@PathVariable long id, @RequestBody Users input) throws ResourceNotFoundException {
@@ -68,6 +85,13 @@ public class UsersRestController {
         return ResponseEntity.ok(updatedUser);
     }
     
+    /**
+     * Activar un usuario inactivo
+     * @param id ID del usuario a activar
+     * @return Objeto User con los datos
+     * @throws ResourceNotFoundException Excepcion cuando un objeto no existe
+     * @throws Exception Manejo de excepciones
+     */
     @PutMapping("/user/activate/{id}")
     @Operation(summary = "Activar usuario", description = "Actualizar un usuario inactivo por id")
     public ResponseEntity<Users> activate(@PathVariable long id) throws ResourceNotFoundException, Exception {
@@ -83,6 +107,13 @@ public class UsersRestController {
         return ResponseEntity.ok(updatedUser);
     }
     
+    /**
+     *  Desctivar un usuario activo
+     * @param id ID del usuario a activar
+     * @return Datos del usuario
+     * @throws ResourceNotFoundException Excepcion cuando un objeto no existe
+     * @throws Exception  Manejo de excepciones
+     */
     @PutMapping("/user/deactivate/{id}")
     @Operation(summary = "Desactivar usuario", description = "Actualizar un usuario activo por id")
     public ResponseEntity<Users> deactivate(@PathVariable long id) throws ResourceNotFoundException, Exception {
@@ -98,6 +129,11 @@ public class UsersRestController {
         return ResponseEntity.ok(updatedUser);
     }
     
+    /**
+     * Agregar uun nuevo usuario
+     * @param input Datos del nuevo usuario
+     * @return Usuario creado
+     */
     @PostMapping("/user")
     @Operation(summary = "Agregar un usuario", description = "Crear un usuario nuevo")
     public ResponseEntity<Users> post(@RequestBody Users input) {
@@ -105,6 +141,10 @@ public class UsersRestController {
         return ResponseEntity.ok(save);
     }
     
+    /**
+     * Generar datos de usuario aleatorios
+     * @return Lista de usuarios generados
+     */
     @PostMapping("/generate")
     @Operation(summary = "Generar usuarios", description = "Genera usuarios nuevos con datos aleatorios")
     public List<Users>  generate() {
@@ -112,6 +152,13 @@ public class UsersRestController {
         return users;
     }
     
+    /**
+     * Marcar un usuario para borrado o eliminacion
+     * @param id ID del usuario a marcar
+     * @return Datos del usuario
+     * @throws ResourceNotFoundException Excepcion cuando un objeto no existe
+     * @throws Exception Manejo de excepciones
+     */
     @DeleteMapping("/user/{id}")
     @Operation(summary = "Eliminar usuario", description = "Actualizar datos de un usuario por id marcandolo para eliminar ")
     public ResponseEntity<Users> delete(@PathVariable long id) throws ResourceNotFoundException, Exception {
@@ -126,6 +173,10 @@ public class UsersRestController {
         return ResponseEntity.ok(updatedUser);
     }
     
+    /**
+     * Generar datos de usuarios aleatorios con faker
+     * @return Lista de usuarios creados
+     */
     public List<Users> generateUsers() {
         List<Users> users = new ArrayList<>();
 

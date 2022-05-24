@@ -7,7 +7,7 @@ package com.melichallenger.loans.entities;
 import lombok.Data;
 
 /**
- *
+ * Objeto para la respuesta de la deuda total
  * @author biosx1706
  */
 @Data

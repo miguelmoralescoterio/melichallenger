@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
- *
+ * Iniciador de la aplicacion
  * @author biosx1706
  */
 @SpringBootApplication
@@ -34,6 +34,11 @@ public class UsersApplication {
         SpringApplication.run(UsersApplication.class, args);
     }
     
+    /**
+     * Metodo para generar la documentacion de swagger para el consumo de los 
+     * endpoints de los usuarios
+     * @return
+     */
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
@@ -42,6 +47,11 @@ public class UsersApplication {
             .build();
     }
     
+    /**
+     * Metodo para generar la documentacion de swagger para el consumo de los 
+     * endpoints de los prestamos y targets
+     * @return
+     */
     @Bean
     public GroupedOpenApi publicLoansApi() {
         return GroupedOpenApi.builder()

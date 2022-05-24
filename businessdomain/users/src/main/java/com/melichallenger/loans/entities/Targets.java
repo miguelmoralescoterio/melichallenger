@@ -18,7 +18,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 /**
- *
+ * Entidad para el manejo de los datos de la tabla targets
  * @author biosx1706
  */
 @Entity
@@ -51,9 +51,21 @@ public class Targets implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private final Timestamp deleted_at = null;
 
+    /**
+     * Contructor
+     */
     public Targets() {        
     }
     
+    /**
+     * Obejeto para el manejo de targets
+     * @param description Descripcion del target
+     * @param amount_min monto minimo del target
+     * @param amount_max monto maximo del target
+     * @param cant_min cantidad minima del target a solicitar en el año
+     * @param cant_max cantidad maxima del target a solicitar en el año
+     * @param rate Rate del target
+     */
     public Targets(String description, long amount_min, long amount_max, int cant_min, int cant_max, float rate) {        
         this.description = description;
         this.amount_min = amount_min;

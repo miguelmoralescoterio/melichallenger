@@ -7,7 +7,7 @@ package com.melichallenger.loans.entities;
 import lombok.Data;
 
 /**
- *
+ *  Objeto para la respuesta de un pago registrado 
  * @author biosx1706
  */
 @Data

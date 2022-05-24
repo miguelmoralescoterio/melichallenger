@@ -20,7 +20,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 /**
- *
+ * Entidad de los datos de los usuarios
  * @author biosx1706
  */
 @Entity
@@ -56,9 +56,19 @@ public class Users implements Serializable {
     @JsonIgnore
     private final Timestamp deleted_at = null;
 
+    /**
+     * Contructor
+     */
     public Users() {        
     }
     
+    /**
+     * Constructor con datos iniciales
+     * @param name Nombre del usuario
+     * @param lastname Apellidos del usuario
+     * @param phone telefono del usuario
+     * @param address Direccion del usuario
+     */
     public Users(String name, String lastname, String phone, String address) {        
         this.name = name;
         this.lastname = lastname;

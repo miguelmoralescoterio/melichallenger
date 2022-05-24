@@ -7,7 +7,7 @@ package com.melichallenger.loans.entities;
 import lombok.Data;
 
 /**
- *
+ * Objeto para la respuesta al realizarse la solicitud de un prestamo
  * @author biosx1706
  */
 @Data

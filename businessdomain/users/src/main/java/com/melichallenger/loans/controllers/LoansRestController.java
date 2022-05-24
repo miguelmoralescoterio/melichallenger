@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- *
+ * Controlador para el manejo de la logida de los prestamos
  * @author biosx1706
  */
 @RestController
@@ -52,6 +52,14 @@ public class LoansRestController {
     @Autowired
     PaymentsRepository paymentsRepository;
     
+    /**
+     * Obtener todos los prestamos registrados, pueden paginarse y filtrarse por fechas
+     * @param pageCount Cantidad de registros por pagina
+     * @param page pagina a consultar
+     * @param dateFrom fecha inicio de consulta 
+     * @param dateTo fecha fin de consulta
+     * @return Objeto List con los registros encontrados
+     */
     @GetMapping("/all")
     @Operation(summary = "Obtener prestamos", description = "Obtiene la lista de todos los prestamos registrados")
     public List<Loans> list( @RequestParam(required = false, defaultValue = "10") int pageCount, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false) String dateFrom, @RequestParam(required = false) String dateTo) {
@@ -75,6 +83,14 @@ public class LoansRestController {
         }
     }
     
+    /**
+     * Obtener todos los prestamos registrados en estado activo, pueden paginarse y filtrarse por fechas
+     * @param pageCount Cantidad de registros por pagina
+     * @param page pagina a consultar
+     * @param dateFrom fecha inicio de consulta 
+     * @param dateTo fecha fin de consulta
+     * @return Objeto List con los registros encontrados
+     */
     @GetMapping("/actives")
     @Operation(summary = "Obtener prestamos activos", description = "Obtiene la lista de todos los prestamos activos registrados")
     public List<Loans> actives( @RequestParam(required = false, defaultValue = "10") int pageCount, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false) String dateFrom, @RequestParam(required = false) String dateTo) {
@@ -98,6 +114,14 @@ public class LoansRestController {
         }
     }
     
+    /**
+     * Obtener todos los prestamos registrados en estado inactivo, pueden paginarse y filtrarse por fechas
+     * @param pageCount Cantidad de registros por pagina
+     * @param page pagina a consultar
+     * @param dateFrom fecha inicio de consulta 
+     * @param dateTo fecha fin de consulta
+     * @return Objeto List con los registros encontrados
+     */
     @GetMapping("/inactives")
     @Operation(summary = "Obtener prestamos terminados", description = "Obtiene la lista de todos los prestamos terminados registrados")
     public List<Loans> inactives( @RequestParam(required = false, defaultValue = "10") int pageCount, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false) String dateFrom, @RequestParam(required = false) String dateTo) {
@@ -121,6 +145,14 @@ public class LoansRestController {
         }
     }
     
+    /**
+     * Obtener todos los prestamos registrados en estado berrado, pueden paginarse y filtrarse por fechas
+     * @param pageCount Cantidad de registros por pagina
+     * @param page pagina a consultar
+     * @param dateFrom fecha inicio de consulta 
+     * @param dateTo fecha fin de consulta
+     * @return Objeto List con los registros encontrados
+     */
     @GetMapping("/deleteds")
     @Operation(summary = "Obtener prestamos borrados", description = "Obtiene la lista de todos los prestamos cancelados o borrdos registrados")
     public List<Loans> deleteds( @RequestParam(required = false, defaultValue = "10") int pageCount, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false) String dateFrom, @RequestParam(required = false) String dateTo) {
@@ -144,6 +176,12 @@ public class LoansRestController {
         }
     }
     
+    /**
+     * Obtener la informacion de un prestamo
+     * @param id ID del prestamos a buscar
+     * @return Objeto Loans con los datos del prestamo
+     * @throws ResourceNotFoundException Excepcion cuando un registro no es encontrado
+     */
     @GetMapping("/{id}")
     @Operation(summary = "Obtener datos de prestamo", description = "Obtiene los detalles de un prestamo por id")
     public Loans  get(@Parameter(description="ID del usuario a buscar") @PathVariable long id) throws ResourceNotFoundException {
@@ -152,6 +190,13 @@ public class LoansRestController {
         return loan;
     }
     
+    /**
+     * Actualizar informaciòn de un prestamo
+     * @param id ID del prestamo a actualizar
+     * @param input Datos a actualizar en el prestamo
+     * @return Retorna un objeto Loans con los datos actualizados
+     * @throws ResourceNotFoundException  Excepcion cuando un registro no es encontrado
+     */
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar Prestamos", description = "Actualizar datos de un prestamo por id")
     public ResponseEntity<Loans> put(@PathVariable long id, @RequestBody Loans input) throws ResourceNotFoundException {
@@ -169,6 +214,12 @@ public class LoansRestController {
         return ResponseEntity.ok(updatedLoan);
     }
     
+    /**
+     * Solicitar un prestamo para un usuario
+     * @param input datos del presatamo
+     * @return Objeto tipo ResponseLoan
+     * @throws ResourceNotFoundException Excepcion cuando un registro no es encontrado
+     */
     @PostMapping("/request")
     @Operation(summary = "Agregar un prestamo", description = "Crear un prestamo nuevo")
     public ResponseEntity<?> post(@RequestBody RequestLoan input) throws ResourceNotFoundException {
@@ -202,6 +253,13 @@ public class LoansRestController {
         return ResponseEntity.ok(responseLoan);
     }
     
+    /**
+     * Marcar un prestamo para eliminacion o borrado
+     * @param id ID del prestamo a marcar
+     * @return Datos del prestamo marcado
+     * @throws ResourceNotFoundException Excepcion cuando un registro no es encontrado
+     * @throws Exception Excepcion de error o mensajes de logica
+     */
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar prestasmo", description = "Actualizar datos de un target por id marcandolo para eliminar ")
     public ResponseEntity<Loans> delete(@PathVariable long id) throws ResourceNotFoundException, Exception {
@@ -216,6 +274,14 @@ public class LoansRestController {
         return ResponseEntity.ok(updatedLoan);
     }
     
+    /**
+     * Registrar pagos a un prestamo
+     * @param id ID del prestamo a pagas
+     * @param input Datos del pago
+     * @return Objeto de tipo ResponsePayment con los datos del pago realizado
+     * @throws ResourceNotFoundException Excepcion de error o mensajes de logica
+     * @throws Exception Excepcion de error o mensajes de logica
+     */
     @PostMapping("/paid/{id}")
     @Operation(summary = "Pagar un prestamo", description = "Registrar pagos a un prestamo nuevo")
     public ResponseEntity<?> paid(@PathVariable long id, @RequestBody RequestPayment input) throws ResourceNotFoundException, Exception {
@@ -250,6 +316,13 @@ public class LoansRestController {
         return ResponseEntity.ok(responsePayment);
     }
     
+    /**
+     * Obtener la deuda de un prestamo
+     * @param id ID del prestamo a consultar la deuda
+     * @param dateTo parametro para determinar hasta que fecha se calculara la deuda, si no se envia este parametro se retornara la deuda total, el formato es YYYY-MM-DD
+     * @return Objeto ResponseDebt con el resultado de la deuda
+     * @throws ResourceNotFoundException Excepcion de error o mensajes de logica
+     */
     @GetMapping("/debt/{id}")
     @Operation(summary = "Obtener deuda de prestamo", description = "Obtiene la deuda de un prestamo por id")
     public ResponseEntity<?> debtLoan(@Parameter(description="ID del prestamo a buscar") @PathVariable long id, @RequestParam(required = false) String dateTo) throws ResourceNotFoundException {
@@ -267,6 +340,13 @@ public class LoansRestController {
         return ResponseEntity.ok(responseDebt);
     }
     
+    /**
+     * Obtener deuda total, se puede calcular hasta uan fecha o por un target, los parametros son opcionales
+     * @param dateTo Fecha hasta la cual calcular la deuda
+     * @param target Nombre del Target a consultar la deuda
+     * @return Retorna la deuda total segun la parametrizacion
+     * @throws ResourceNotFoundException Excepcion de error o mensajes de logica
+     */
     @GetMapping("/totalDebt")
     @Operation(summary = "Obtener deuda total", description = "Obtiene la deuda general")
     public ResponseEntity<?> debtTotal(@RequestParam(required = false) String dateTo, @RequestParam(required = false) String target) throws ResourceNotFoundException {

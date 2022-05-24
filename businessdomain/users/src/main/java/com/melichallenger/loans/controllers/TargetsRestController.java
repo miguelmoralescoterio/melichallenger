@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 /**
- *
+ * Controlador para el manejo de los targets
  * @author biosx1706
  */
 @RestController
@@ -33,6 +33,10 @@ public class TargetsRestController {
     @Autowired
     TargetsRepository targetsRepository;
     
+    /**
+     * Retorna todos loa targets registrados
+     * @return List con todos los targets
+     */
     @GetMapping
     @Operation(summary = "Obtener Targets", description = "Obtiene la lista de todos los targets registrados")    
     public List<Targets> list() {
@@ -40,6 +44,12 @@ public class TargetsRestController {
         return targets;
     }
     
+    /**
+     * Obtener un target por el ID
+     * @param id ID del target a buscar
+     * @return Objeto Target con los datos
+     * @throws ResourceNotFoundException  Excepcion cuando un registro no es encontrado
+     */
     @GetMapping("/{id}")
     @Operation(summary = "Obtener target", description = "Obtiene un target por id")
     public Targets  get(@Parameter(description="ID del target a buscar") @PathVariable long id) throws ResourceNotFoundException {
@@ -48,6 +58,13 @@ public class TargetsRestController {
         return target;
     }
     
+    /**
+     * Actualizar un targer
+     * @param id ID del target a actualizar
+     * @param input Datos a actualizar del target
+     * @return Objeto Target con los datos actualizados
+     * @throws ResourceNotFoundException  Excepcion cuando un registro no es encontrado
+     */
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar target", description = "Actualizar datos de un target por id")
     public ResponseEntity<Targets> put(@PathVariable long id, @RequestBody Targets input) throws ResourceNotFoundException {
@@ -64,7 +81,12 @@ public class TargetsRestController {
         final Targets updatedTarget = targetsRepository.save(target);
         return ResponseEntity.ok(updatedTarget);
     }
-    
+        
+    /**
+     *
+     * @param input
+     * @return
+     */
     @PostMapping
     @Operation(summary = "Agregar un target", description = "Crear un target nuevo")
     public ResponseEntity<Targets> post(@RequestBody Targets input) {
@@ -72,6 +94,13 @@ public class TargetsRestController {
         return ResponseEntity.ok(save);
     }
     
+    /**
+     * Marcar un target para elimnar o borrar
+     * @param id ID del target a margar
+     * @return Datos del target marcado para borrado
+     * @throws ResourceNotFoundException  Excepcion cuando un registro no es encontrado
+     * @throws Exception Exception Excepcion de error o mensajes de logica
+     */
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar target", description = "Actualizar datos de un target por id marcandolo para eliminar ")
     public ResponseEntity<Targets> delete(@PathVariable long id) throws ResourceNotFoundException, Exception {

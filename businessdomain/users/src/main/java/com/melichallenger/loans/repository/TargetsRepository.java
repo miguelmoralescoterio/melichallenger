@@ -9,11 +9,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 /**
- *
+ * Repositorio para consultar a los targets
  * @author biosx1706
  */
 public interface TargetsRepository extends JpaRepository<Targets, Long> {
     
+    /**
+     * Validar si un usuario esta en la capacidad de un nuevo prestamo
+     * @param cantLoans Catidad de prestamos actuales
+     * @param amountRequest Monto solicitado
+     * @return
+     */
     @Query( value = "SELECT * FROM targets l "
         + "WHERE status = 'active' " 
         +   "AND (" 
